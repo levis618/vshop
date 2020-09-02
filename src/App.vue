@@ -6,9 +6,15 @@
 </template>
 
 <script>
-// import FooterGuid from '@/components/FooterGuid/FooterGuid.vue';
-import FooterGuide from './components/FooterGuide/FooterGuide.vue';
+import { mapActions } from 'vuex'
+import FooterGuide from './components/FooterGuide/FooterGuide.vue'
 export default {
+  methods: {
+    ...mapActions(['getAddress']),
+  },
+  mounted() {
+    this.getAddress()
+  },
   components: {
     FooterGuide,
   },

@@ -5,16 +5,11 @@ import VueRouter from 'vue-router'
 // import Order from '../views/Order/Order.vue'
 // import Profile from '../views/Profile/Profile.vue'
 
-const MSite = () =>
-  import(/* webpackChunkName: "MSite" */ '../views/MSite/MSite.vue')
-const Search = () =>
-  import(/* webpackChunkName: "Search" */ '../views/Search/Search.vue')
-const Order = () =>
-  import(/* webpackChunkName: "Order" */ '../views/Order/Order.vue')
-const Profile = () =>
-  import(/* webpackChunkName: "Profile" */ '../views/Profile/Profile.vue')
-const Login = () =>
-  import(/* webpackChunkName: "Login" */ '../views/Login/Login.vue')
+const MSite = () => import(/* webpackChunkName: "MSite" */ '../views/MSite/MSite.vue')
+const Search = () => import(/* webpackChunkName: "Search" */ '../views/Search/Search.vue')
+const Order = () => import(/* webpackChunkName: "Order" */ '../views/Order/Order.vue')
+const Profile = () => import(/* webpackChunkName: "Profile" */ '../views/Profile/Profile.vue')
+const Login = () => import(/* webpackChunkName: "Login" */ '../views/Login/Login.vue')
 
 import Shop from '../views/Shop/Shop.vue'
 import ShopGoods from '../views/Shop/ShopGoods/ShopGoods.vue'
@@ -53,7 +48,7 @@ const routes = [
     component: Shop,
     children: [
       {
-        path: '/shop/goods',
+        path: '/shop/goods/:id',
         component: ShopGoods,
       },
       {
@@ -80,8 +75,7 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ '../views/About.vue'),
+    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
   },
 ]
 

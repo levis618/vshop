@@ -2,17 +2,8 @@
   <nav class="msite_nav">
     <div class="swiper-container" v-if="categorys.length">
       <div class="swiper-wrapper">
-        <div
-          class="swiper-slide"
-          v-for="(category, index) in categorys"
-          :key="index"
-        >
-          <a
-            href="javascript:"
-            class="link_to_food"
-            v-for="item in category"
-            :key="item.id"
-          >
+        <div class="swiper-slide" v-for="(category, index) in categoryList" :key="index">
+          <a href="javascript:" class="link_to_food" v-for="item in category" :key="item.id">
             <div class="food_container">
               <img :src="baseImagesURL + item.image_url" />
             </div>
@@ -31,14 +22,22 @@ import Swiper from 'swiper'
 import 'swiper/dist/css/swiper.min.css'
 
 import { chunk } from 'lodash-es'
+import { mapState, mapActions } from 'vuex'
 
-import { reqCategory } from '../../api'
 export default {
   data() {
     return {
-      categorys: [],
       baseImagesURL: 'https://fuss10.elemecdn.com',
     }
+  },
+  computed: {
+    ...mapState(['categorys']),
+    categoryList() {
+      return chunk(this.categorys, 8)
+    },
+  },
+  methods: {
+    ...mapActions(['getCategorys']),
   },
   watch: {
     categorys(value) {
@@ -56,9 +55,8 @@ export default {
       })
     },
   },
-  async mounted() {
-    const result = await reqCategory()
-    this.categorys = chunk(result.data, 8)
+  mounted() {
+    this.getCategorys()
   },
 }
 </script>
