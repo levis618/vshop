@@ -1,10 +1,6 @@
 <template>
   <section class="search">
-    <header class="header">
-      <a class="header_title">
-        <span class="header_title_text">搜索</span>
-      </a>
-    </header>
+    <HeaderTop title="搜索" />
     <form
       class="search_form"
       action="#"
@@ -25,11 +21,15 @@
 </template>
 
 <script>
+import HeaderTop from '../../components/HeaderTop/HeaderTop.vue'
 export default {
   data () {
     return {
       key: ''
     }
+  },
+  components: {
+    HeaderTop,
   },
 }
 </script>
@@ -39,6 +39,8 @@ export default {
 
 .search { // 搜索
   width: 100%;
+  height: 100%;
+  overflow: hidden;
 
   .search_form {
     clearFix();
