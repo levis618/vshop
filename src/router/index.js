@@ -23,45 +23,59 @@ const routes = [
     path: '/home',
     name: 'MSite',
     component: MSite,
+    meta: {
+      hasFoot: true,
+    },
   },
   {
     path: '/search',
     name: 'Search',
     component: Search,
+    meta: {
+      hasFoot: true,
+    },
   },
   {
     path: '/order',
     name: 'Order',
     component: Order,
+    meta: {
+      hasFoot: true,
+    },
   },
   {
     path: '/profile',
     name: 'Profile',
     component: Profile,
+    meta: {
+      hasFoot: true,
+    },
   },
   {
     path: '/login',
     component: Login,
   },
   {
-    path: '/shop',
+    path: '/shop/:id',
     component: Shop,
+    props: (route) => ({ id: route.params.id }),
+    // props: true, // 将所有params参数转换成标签属性传递给子路由组件
     children: [
       {
-        path: '/shop/goods/:id',
+        path: 'goods',
         component: ShopGoods,
       },
       {
-        path: '/shop/ratings',
+        path: 'ratings',
         component: ShopRatings,
       },
       {
-        path: '/shop/info',
+        path: 'info',
         component: ShopInfo,
       },
       {
         path: '',
-        redirect: '/shop/goods',
+        redirect: 'goods',
       },
     ],
   },

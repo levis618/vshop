@@ -1,4 +1,4 @@
-import { RECEIVE_ADDRESS, RECEIVE_CATEGORYS, RECEIVE_SHOPS } from './mutation-types.js'
+import { RECEIVE_ADDRESS, RECEIVE_CATEGORYS, RECEIVE_SHOPS, RECEIVE_USERINFO, CLEAR_USERINFO } from './mutation-types.js'
 export default {
   [RECEIVE_ADDRESS](state, { address }) {
     state.address = address
@@ -8,5 +8,11 @@ export default {
   },
   [RECEIVE_SHOPS](state, { shops }) {
     state.shops = shops
+  },
+  [RECEIVE_USERINFO](state, { userInfo }) {
+    state.userInfo = userInfo
+  },
+  [CLEAR_USERINFO](state) {
+    state.userInfo = {}
   },
 }

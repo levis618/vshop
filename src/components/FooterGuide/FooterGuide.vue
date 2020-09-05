@@ -1,47 +1,33 @@
 <template>
   <footer class="footer_guide border-1px">
-    <router-link
-      to="/home"
-      class="guide_item"
-      :class="{on:$route.path === '/home'}"
-      replace
-    >
+    <router-link to="/home" class="guide_item" :class="{ on: $route.path === '/home' }" replace>
       <span class="item_icon">
         <i class="iconfont icon-waimai"></i>
       </span>
       <span>外卖</span>
     </router-link>
 
-    <router-link
-      to="/search"
-      class="guide_item"
-      :class="{on:$route.path === '/search'}"
-      replace
-    >
+    <router-link to="/search" class="guide_item" :class="{ on: $route.path === '/search' }" replace>
       <span class="item_icon">
         <i class="iconfont icon-search"></i>
       </span>
       <span>搜索</span>
     </router-link>
 
-    <router-link
-      to="/order"
-      class="guide_item"
-      :class="{on:$route.path === '/order'}"
-      replace
-    >
+    <router-link to="/order" class="guide_item" :class="{ on: $route.path === '/order' }" replace>
       <span class="item_icon">
         <i class="iconfont icon-dingdan"></i>
       </span>
       <span>订单</span>
     </router-link>
 
-    <router-link
-      to="/profile"
-      class="guide_item"
-      :class="{on:$route.path === '/profile'}"
-      replace
-    >
+    <!-- <router-link :to="{ path: '/profile', query: { id: 1234345 } }" class="guide_item" :class="{ on: $route.path === '/profile' }" replace>
+      <span class="item_icon">
+        <i class="iconfont icon-geren"></i>
+      </span>
+      <span>我的</span>
+    </router-link> -->
+    <router-link :to="{ name: 'Profile', params: { id: 1234345 } }" class="guide_item" :class="{ on: $route.path === '/profile' }" replace>
       <span class="item_icon">
         <i class="iconfont icon-geren"></i>
       </span>
@@ -51,9 +37,7 @@
 </template>
 
 <script>
-export default {
-
-}
+export default {}
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>

@@ -2,17 +2,23 @@
   <section class="profile">
     <HeaderTop title="我的" />
     <section class="profile-number">
-      <router-link to="/login" class="profile-link">
+      <router-link
+        :to="userInfo._id ? '/home' : '/login'"
+        class="profile-link"
+      >
         <div class="profile_image">
           <i class="iconfont icon-person"></i>
         </div>
         <div class="user-info">
-          <p class="user-info-top">登录/注册</p>
+          <p
+            class="user-info-top"
+            v-if="userInfo.name"
+          >{{ userInfo.name || '登录/注册' }}</p>
           <p>
             <span class="user-icon">
               <i class="iconfont icon-shouji icon-mobile"></i>
             </span>
-            <span class="icon-mobile-number">暂无绑定手机号</span>
+            <span class="icon-mobile-number">{{ userInfo.phone || '暂无绑定手机号' }}</span>
           </p>
         </div>
         <span class="arrow">
@@ -22,15 +28,24 @@
     </section>
     <section class="profile_info_data border-1px">
       <ul class="info_data_list">
-        <a href="javascript:" class="info_data_link">
+        <a
+          href="javascript:"
+          class="info_data_link"
+        >
           <span class="info_data_top"><span>0.00</span>元</span>
           <span class="info_data_bottom">我的余额</span>
         </a>
-        <a href="javascript:" class="info_data_link">
+        <a
+          href="javascript:"
+          class="info_data_link"
+        >
           <span class="info_data_top"><span>0</span>个</span>
           <span class="info_data_bottom">我的优惠</span>
         </a>
-        <a href="javascript:" class="info_data_link">
+        <a
+          href="javascript:"
+          class="info_data_link"
+        >
           <span class="info_data_top"><span>0</span>分</span>
           <span class="info_data_bottom">我的积分</span>
         </a>
@@ -38,7 +53,10 @@
     </section>
     <section class="profile_my_order border-1px">
       <!-- 我的订单 -->
-      <a href="javascript:" class="my_order">
+      <a
+        href="javascript:"
+        class="my_order"
+      >
         <span>
           <i class="iconfont icon-order-s"></i>
         </span>
@@ -50,7 +68,10 @@
         </div>
       </a>
       <!-- 积分商城 -->
-      <a href="javascript:" class="my_order">
+      <a
+        href="javascript:"
+        class="my_order"
+      >
         <span>
           <i class="iconfont icon-jifen"></i>
         </span>
@@ -62,7 +83,10 @@
         </div>
       </a>
       <!-- 硅谷外卖会员卡 -->
-      <a href="javascript:" class="my_order">
+      <a
+        href="javascript:"
+        class="my_order"
+      >
         <span>
           <i class="iconfont icon-vip"></i>
         </span>
@@ -76,7 +100,10 @@
     </section>
     <section class="profile_my_order border-1px">
       <!-- 服务中心 -->
-      <a href="javascript:" class="my_order">
+      <a
+        href="javascript:"
+        class="my_order"
+      >
         <span>
           <i class="iconfont icon-fuwu"></i>
         </span>
@@ -88,19 +115,35 @@
         </div>
       </a>
     </section>
+    <!-- <mt-button type="danger" size="large">退出</mt-button> -->
+    <Button
+      type="danger"
+      size="large"
+      @click="loginOut"
+      v-if="userInfo._id"
+    >退出</Button>
   </section>
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
+import { Button } from 'mint-ui'
 import HeaderTop from '../../components/HeaderTop/HeaderTop.vue'
 export default {
-  data() {
+  data () {
     return {
       key: 'value',
     }
   },
+  computed: {
+    ...mapState(['userInfo']),
+  },
+  methods: {
+    ...mapActions(['loginOut']),
+  },
   components: {
     HeaderTop,
+    Button,
   },
 }
 </script>
@@ -110,6 +153,8 @@ export default {
 
 .profile { // 我的
   width: 100%;
+  height: 100%;
+  overflow: hidden;
 
   .profile-number {
     margin-top: 45.5px;

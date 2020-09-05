@@ -1,5 +1,5 @@
-import { RECEIVE_ADDRESS, RECEIVE_CATEGORYS, RECEIVE_SHOPS } from './mutation-types.js'
-import { reqAddress, reqCategorys, reqShops } from '../api'
+import { RECEIVE_ADDRESS, RECEIVE_CATEGORYS, RECEIVE_SHOPS, RECEIVE_USERINFO, CLEAR_USERINFO } from './mutation-types.js'
+import { reqAddress, reqCategorys, reqShops, reqAutoLogin, reqLoginOut } from '../api'
 
 export default {
   async getAddress({ commit, state }) {
@@ -22,6 +22,23 @@ export default {
     const result = await reqShops(latitude, longitude)
     if (!result.code) {
       commit(RECEIVE_SHOPS, { shops: result.data })
+    }
+  },
+  login({ commit }, userInfo) {
+    commit(RECEIVE_USERINFO, { userInfo })
+  },
+  async autoLogin({ commit }) {
+    const { code, data } = await reqAutoLogin()
+
+    if (!code) {
+      commit(RECEIVE_USERINFO, { userInfo: data })
+    }
+  },
+  async loginOut({ commit }) {
+    const { code } = await reqLoginOut()
+    console.log(code)
+    if (!code) {
+      commit(CLEAR_USERINFO)
     }
   },
 }

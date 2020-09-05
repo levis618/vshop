@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="ratings"
-    ref="ratings"
-  >
+  <div class="ratings" ref="ratings">
     <div class="ratings-content">
       <div class="overview">
         <div class="overview-left">
@@ -13,18 +10,12 @@
         <div class="overview-right">
           <div class="score-wrapper">
             <span class="title">服务态度</span>
-            <Star
-              :score="4.6"
-              :size="36"
-            />
+            <Star :score="4.6" :size="36" />
             <span class="score">4.6</span>
           </div>
           <div class="score-wrapper">
             <span class="title">商品评分</span>
-            <Star
-              :score="4.7"
-              :size="36"
-            />
+            <Star :score="4.7" :size="36" />
             <span class="score">4.7</span>
           </div>
           <div class="delivery-wrapper">
@@ -35,17 +26,10 @@
       </div>
       <div class="split"></div>
       <div class="ratingselect">
-
         <div class="rating-type border-1px">
-          <span class="block positive active">
-            全部<span class="count">30</span>
-          </span>
-          <span class="block positive">
-            满意<span class="count">28</span>
-          </span>
-          <span class="block negative">
-            不满意<span class="count">2</span>
-          </span>
+          <span class="block positive active"> 全部<span class="count">30</span> </span>
+          <span class="block positive"> 满意<span class="count">28</span> </span>
+          <span class="block negative"> 不满意<span class="count">2</span> </span>
         </div>
         <div class="switch on">
           <span class="iconfont icon-check_circle"></span>
@@ -56,19 +40,12 @@
         <ul>
           <li class="rating-item">
             <div class="avatar">
-              <img
-                width="28"
-                height="28"
-                src="http://static.galileo.xiaojukeji.com/static/tms/default_header.png"
-              >
+              <img width="28" height="28" src="http://static.galileo.xiaojukeji.com/static/tms/default_header.png" />
             </div>
             <div class="content">
               <h1 class="name">aa</h1>
               <div class="star-wrapper">
-                <Star
-                  :score="5"
-                  :size="24"
-                />
+                <Star :score="5" :size="24" />
                 <span class="delivery">30</span>
               </div>
               <p class="text">不错</p>
@@ -83,20 +60,12 @@
           </li>
           <li class="rating-item">
             <div class="avatar">
-
-              <img
-                width="28"
-                height="28"
-                src="http://static.galileo.xiaojukeji.com/static/tms/default_header.png"
-              >
+              <img width="28" height="28" src="http://static.galileo.xiaojukeji.com/static/tms/default_header.png" />
             </div>
             <div class="content">
               <h1 class="name">aa</h1>
               <div class="star-wrapper">
-                <Star
-                  :score="4"
-                  :size="24"
-                />
+                <Star :score="4" :size="24" />
                 <span class="delivery">30</span>
               </div>
               <p class="text">不错</p>
@@ -113,8 +82,12 @@
 </template>
 
 <script>
+import Star from '../../../components/Start/Start.vue'
 export default {
-
+  components: {
+    Star,
+  },
+  mounted() {},
 }
 </script>
 

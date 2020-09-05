@@ -1,7 +1,8 @@
 <template>
   <div id="app">
-    <FooterGuide />
     <router-view />
+    <FooterGuide v-show="$route.meta.hasFoot" />
+    <!-- <FooterGuide v-show="$route.meta.showFooter" /> -->
   </div>
 </template>
 
@@ -10,10 +11,10 @@ import { mapActions } from 'vuex'
 import FooterGuide from './components/FooterGuide/FooterGuide.vue'
 export default {
   methods: {
-    ...mapActions(['getAddress']),
+    ...mapActions(['autoLogin']),
   },
   mounted() {
-    this.getAddress()
+    this.autoLogin()
   },
   components: {
     FooterGuide,
@@ -26,5 +27,9 @@ export default {
   width: 100%;
   height: 100%;
   // background: #f5f5f5;
+}
+
+* {
+  touch-action: pan-y;
 }
 </style>

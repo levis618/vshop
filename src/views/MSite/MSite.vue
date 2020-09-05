@@ -5,19 +5,27 @@
       <span class="header_search" slot="left">
         <i class="iconfont icon-sousuo"></i>
       </span>
-      <span class="header_login" slot="right">
-        <span class="header_login_text">登录|注册</span>
+      <span class="header_login" slot="right" @click="go">
+        <span class="header_login_text" v-if="!userInfo._id">登录|注册</span>
+        <span class="header_login_text" v-else>
+          <i class="iconfont icon-person"></i>
+        </span>
       </span>
     </HeaderTop>
-    <!--首页导航-->
-    <MsiteNav />
-    <!--首页附近商家-->
-    <ShopList />
+    <div class="miste-content-wrapper">
+      <div class="miste-content">
+        <!--首页导航-->
+        <MsiteNav />
+        <!--首页附近商家-->
+        <ShopList />
+      </div>
+    </div>
   </section>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex'
+import BScroll from 'better-scroll'
 
 import HeaderTop from '../../components/HeaderTop/HeaderTop.vue'
 import MsiteNav from '../../components/MsiteNav/MsiteNav.vue'
@@ -28,14 +36,32 @@ export default {
     return {}
   },
   computed: {
-    ...mapState(['address']),
+    ...mapState(['address', 'shops', 'userInfo']),
   },
   methods: {
     ...mapActions(['getShops']),
+    go() {
+      const path = this.userInfo._id ? '/profile' : '/login'
+      this.$router.push(path)
+      // if (this.userInfo._id) {
+      //   this.$router.push('/profile')
+      // } else {
+      //   this.$router.push('/login')
+      // }
+    },
   },
-  mounted() {
-    this.getShops()
+  watch: {
+    shops(newValue) {
+      this.$nextTick(() => {
+        if (newValue.length) {
+          this.bScroll = new BScroll('.miste-content-wrapper', {
+            click: true,
+          })
+        }
+      })
+    },
   },
+  mounted() {},
   components: {
     HeaderTop,
     MsiteNav,
@@ -47,7 +73,7 @@ export default {
 <style lang="stylus" scoped>
 @import '../../assets/css/mixins.styl';
 
-&.msite { // 首页
+.msite { // 首页
   width: 100%;
 
   .msite_nav {
@@ -104,6 +130,13 @@ export default {
         }
       }
     }
+  }
+
+  .miste-content-wrapper {
+    position: fixed;
+    top: 45px;
+    bottom: 50px;
+    width: 100%;
   }
 }
 </style>

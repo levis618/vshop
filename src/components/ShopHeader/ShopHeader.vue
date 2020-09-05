@@ -1,18 +1,12 @@
 <template>
   <div class="shop-header">
     <nav class="shop-nav">
-      <a
-        class="back"
-        @click="$router.back()"
-      >
+      <a class="back" @click="$router.back()">
         <i class="iconfont icon-arrow_left"></i>
       </a>
     </nav>
     <div class="shop-content">
-      <img
-        class="content-image"
-        src="https://fuss10.elemecdn.com/8/40/02872ce8aefe75c16d3190e75ad61jpeg.jpeg"
-      >
+      <img class="content-image" src="https://fuss10.elemecdn.com/8/40/02872ce8aefe75c16d3190e75ad61jpeg.jpeg" />
       <div class="header-content">
         <h2 class="content-title">
           <span class="content-tag">
@@ -32,7 +26,7 @@
         </div>
       </div>
     </div>
-    <div class="shop-header-discounts">
+    <div class="shop-header-discounts" @click="show = !show">
       <div class="discounts-left">
         <div class="activity activity-green">
           <span class="content-tag">
@@ -45,10 +39,7 @@
         4 个优惠
       </div>
     </div>
-    <div
-      class="shop-brief-modal"
-      v-show="false"
-    >
+    <div class="shop-brief-modal" v-show="false">
       <div class="brief-modal-content">
         <h2 class="content-title">
           <span class="content-tag">
@@ -88,10 +79,7 @@
       </div>
       <div class="brief-modal-cover"></div>
     </div>
-    <div
-      class="activity-sheet"
-      style="display: none"
-    >
+    <div class="activity-sheet" :class="{ on: show }">
       <div class="activity-sheet-content">
         <h2 class="activity-sheet-title">优惠活动</h2>
         <ul class="list">
@@ -143,7 +131,11 @@
 
 <script>
 export default {
-
+  data() {
+    return {
+      show: false,
+    }
+  },
 }
 </script>
 
@@ -519,7 +511,14 @@ export default {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 99;
+    z-index: 299;
+    opacity :0;
+    display:none;
+    transition : all .3s;
+    &.on{
+      opacity:1;
+      display:block;
+    }
 
     .activity-sheet-content {
       position: absolute;

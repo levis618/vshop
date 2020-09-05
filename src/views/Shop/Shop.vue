@@ -4,19 +4,19 @@
     <div class="tab">
       <div class="tab-item">
         <router-link
-          to="/shop/goods"
+          :to="`/shop/${id}/goods`"
           replace
         >点餐</router-link>
       </div>
       <div class="tab-item">
         <router-link
-          to="/shop/ratings"
+          :to="`/shop/${id}/ratings`"
           replace
         >评价</router-link>
       </div>
       <div class="tab-item">
         <router-link
-          to="/shop/info"
+          :to="`/shop/${id}/info`"
           replace
         >商家</router-link>
       </div>
@@ -30,8 +30,14 @@ import ShopHeader from '@/components/ShopHeader/ShopHeader.vue';
 
 
 export default {
+  props: ['id'],
+  // props: {
+  //   id: String
+  // },
   components: {
     ShopHeader
+  },
+  mounted () {
   },
 };
 </script>
