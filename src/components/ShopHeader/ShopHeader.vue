@@ -1,147 +1,148 @@
 <template>
   <div class="shop-header">
-    <nav class="shop-nav">
+    <nav class="shop-nav" :style="{ backgroundImage: `url(${shopInfo.bgImg})` }">
       <a class="back" @click="$router.back()">
         <i class="iconfont icon-arrow_left"></i>
       </a>
     </nav>
-    <div class="shop-content">
-      <img class="content-image" src="https://fuss10.elemecdn.com/8/40/02872ce8aefe75c16d3190e75ad61jpeg.jpeg" />
+    <div class="shop-content" @click="toggleshop">
+      <img class="content-image" :src="shopInfo.avatar" />
       <div class="header-content">
         <h2 class="content-title">
           <span class="content-tag">
             <span class="mini-tag">品牌</span>
           </span>
-          <span class="content-name">大鸭梨</span>
+          <span class="content-name">{{ shopInfo.name }}</span>
           <i class="content-icon"></i>
         </h2>
         <div class="shop-message">
-          <span class="shop-message-detail">5</span>
-          <span class="shop-message-detail">月售 100 单</span>
+          <span class="shop-message-detail">{{ shopInfo.score }}</span>
+          <span class="shop-message-detail">月售 {{ shopInfo.sellCount }} 单</span>
           <span class="shop-message-detail">
             硅谷专送
-            <span>约 30 分钟</span>
+            <span>约 {{ shopInfo.deliveryTime }} 分钟</span>
           </span>
-          <span class="shop-message-detail">距离 1000m</span>
+          <span class="shop-message-detail">距离 {{ shopInfo.distance }}</span>
         </div>
       </div>
     </div>
-    <div class="shop-header-discounts" @click="show = !show">
+    <div class="shop-header-discounts" v-if="shopInfo.supports" @click="togglesupports">
       <div class="discounts-left">
-        <div class="activity activity-green">
+        <div class="activity" :class="supportClasses[shopInfo.supports[0].type]">
           <span class="content-tag">
-            <span class="mini-tag">首单</span>
+            <span class="mini-tag">{{ shopInfo.supports[0].name }}</span>
           </span>
-          <span class="activity-content ellipsis">新用户下单立减 17 元</span>
+          <span class="activity-content ellipsis">{{ shopInfo.supports[0].content }}</span>
         </div>
       </div>
-      <div class="discounts-right">
-        4 个优惠
-      </div>
+      <div class="discounts-right">{{ shopInfo.supports.length }}个优惠</div>
     </div>
-    <div class="shop-brief-modal" v-show="false">
-      <div class="brief-modal-content">
-        <h2 class="content-title">
-          <span class="content-tag">
-            <span class="mini-tag">品牌</span>
-          </span>
-          <span class="content-name">嘉禾一品（温都水城）</span>
-        </h2>
-        <ul class="brief-modal-msg">
-          <li>
-            <h3>3.5</h3>
-            <p>评分</p>
-          </li>
-          <li>
-            <h3>90 单</h3>
-            <p>月售</p>
-          </li>
-          <li>
-            <h3>硅谷专送</h3>
-            <p>约 28 分钟</p>
-          </li>
-          <li>
-            <h3>4 元</h3>
-            <p>配送费用</p>
-          </li>
-          <li>
-            <h3>1000m</h3>
-            <p>距离</p>
-          </li>
-        </ul>
-        <h3 class="brief-modal-title"><span>公告</span></h3>
-        <div class="brief-modal-notice">
-          是以粥为特色的中式营养快餐，自 2004 年 10 月 18 日创立“嘉和一品”品牌至今
+    <transition name="fade">
+      <div class="shop-brief-modal" v-if="shopShow">
+        <div class="brief-modal-content">
+          <h2 class="content-title">
+            <span class="content-tag">
+              <span class="mini-tag">品牌</span>
+            </span>
+            <span class="content-name">{{ shopInfo.name }}</span>
+          </h2>
+          <ul class="brief-modal-msg">
+            <li>
+              <h3>{{ shopInfo.score }}</h3>
+              <p>评分</p>
+            </li>
+            <li>
+              <h3>{{ shopInfo.sellCount }} 单</h3>
+              <p>月售</p>
+            </li>
+            <li>
+              <h3>{{ shopInfo.description }}</h3>
+              <p>约 {{ shopInfo.deliveryTime }} 分钟</p>
+            </li>
+            <li>
+              <h3>{{ shopInfo.deliveryPrice }} 元</h3>
+              <p>配送费用</p>
+            </li>
+            <li>
+              <h3>{{ shopInfo.distance }}</h3>
+              <p>距离</p>
+            </li>
+          </ul>
+          <h3 class="brief-modal-title"><span>公告</span></h3>
+          <div class="brief-modal-notice">{{ shopInfo.bulletin }}</div>
+          <div class="mask-footer" @click="toggleshop">
+            <span class="iconfont icon-close"></span>
+          </div>
         </div>
-        <div class="mask-footer">
-          <span class="iconfont icon-close"></span>
-        </div>
+        <div class="brief-modal-cover" @click="toggleshop"></div>
       </div>
-      <div class="brief-modal-cover"></div>
-    </div>
-    <div class="activity-sheet" :class="{ on: show }">
-      <div class="activity-sheet-content">
-        <h2 class="activity-sheet-title">优惠活动</h2>
-        <ul class="list">
-          <li class="activity-item activity-green">
-            <span class="content-tag">
-              <span class="mini-tag">首单</span>
-            </span>
-            <span class="activity-content">新用户下单立减 17 元(不与其它活动同享)</span>
-          </li>
-          <li class="activity-item activity-red">
-            <span class="content-tag">
-              <span class="mini-tag">满减</span>
-            </span>
-            <span class="activity-content">满 35 减 19，满 65 减 35</span>
-          </li>
-          <li class="activity-item activity-orange">
-            <span class="content-tag">
-              <span class="mini-tag">特价</span>
-            </span>
-            <span class="activity-content">【立减 19.5 元】欢乐小食餐</span>
-          </li>
-          <li class="activity-item activity-green">
-            <span class="content-tag">
-              <span class="mini-tag">首单</span>
-            </span>
-            <span class="activity-content">新用户下单立减 17 元(不与其它活动同享)</span>
-          </li>
-          <li class="activity-item activity-red">
-            <span class="content-tag">
-              <span class="mini-tag">满减</span>
-            </span>
-            <span class="activity-content">满 35 减 19，满 65 减 35</span>
-          </li>
-          <li class="activity-item activity-orange">
-            <span class="content-tag">
-              <span class="mini-tag">特价</span>
-            </span>
-            <span class="activity-content">【立减 19.5 元】欢乐小食餐</span>
-          </li>
-        </ul>
-        <div class="activity-sheet-close">
-          <span class="iconfont icon-close"></span>
+    </transition>
+    <transition name="fade">
+      <div class="activity-sheet" v-show="supportsShow">
+        <div class="activity-sheet-content">
+          <h2 class="activity-sheet-title">优惠活动</h2>
+          <ul class="list">
+            <li
+              class="activity-item activity-green"
+              :class="supportClasses[support.type]"
+              v-for="(support, index) in shopInfo.supports"
+              :key="index"
+            >
+              <span class="content-tag">
+                <span class="mini-tag">{{ support.name }}</span>
+              </span>
+              <span class="activity-content">{{ support.content }}</span>
+            </li>
+          </ul>
+          <div class="activity-sheet-close" @click="togglesupports">
+            <span class="iconfont icon-close"></span>
+          </div>
         </div>
+        <div class="activity-sheet-cover" @click="togglesupports"></div>
       </div>
-      <div class="activity-sheet-cover"></div>
-    </div>
+    </transition>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   data() {
     return {
-      show: false,
+      shopShow: false,
+      supportsShow: false,
+      supportClasses: ['activity-green', 'activity-red', 'activity-orange'],
     }
+  },
+  computed: {
+    ...mapState(['shopInfo']),
+  },
+  methods: {
+    toggleshop() {
+      this.shopShow = !this.shopShow
+    },
+    togglesupports() {
+      this.supportsShow = !this.supportsShow
+    },
   },
 }
 </script>
 
 <style lang="stylus" scoped>
 @import '../../assets/css/mixins.styl';
-
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .3s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+.move-enter-active, .move-leave-active {
+  transition: transform .3s;
+  transform : translateY(0)
+}
+.move-enter, .fade-leave-to {
+  transform : translateY(100%)
+}
 .shop-header {
   height: 100%;
   position: relative;
@@ -369,17 +370,22 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 52;
+    z-index: -1;
+      z-index: 299;
     flex-direction: column;
     color: #333;
+    // opacity:0;
+    // transition : opacity .5s;
+    // &.on{
+    //   opacity:1;
+    // }
+    // &.fade-enter-active, &.fade-leave-active {
+    //   transition: opacity 0.5s;
+    // }
 
-    &.fade-enter-active, &.fade-leave-active {
-      transition: opacity 0.5s;
-    }
-
-    &.fade-enter, &.fade-leave-to {
-      opacity: 0;
-    }
+    // &.fade-enter, &.fade-leave-to {
+    //   opacity: 0;
+    // }
 
     .brief-modal-cover {
       position: absolute;
@@ -512,13 +518,13 @@ export default {
     width: 100%;
     height: 100%;
     z-index: 299;
-    opacity :0;
-    display:none;
-    transition : all .3s;
-    &.on{
-      opacity:1;
-      display:block;
-    }
+    // opacity :0;
+    // display:none;
+    // transition : all .3s;
+    // &.on{
+    //   opacity:1;
+    //   display:block;
+    // }
 
     .activity-sheet-content {
       position: absolute;

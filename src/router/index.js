@@ -15,6 +15,7 @@ import Shop from '../views/Shop/Shop.vue'
 import ShopGoods from '../views/Shop/ShopGoods/ShopGoods.vue'
 import ShopRatings from '../views/Shop/ShopRatings/ShopRatings.vue'
 import ShopInfo from '../views/Shop/ShopInfo/ShopInfo.vue'
+import Scroll from '../views/Scroll/Scroll.vue'
 
 Vue.use(VueRouter)
 
@@ -64,14 +65,23 @@ const routes = [
       {
         path: 'goods',
         component: ShopGoods,
+        meta: {
+          title: '点餐',
+        },
       },
       {
         path: 'ratings',
         component: ShopRatings,
+        meta: {
+          title: '评论',
+        },
       },
       {
         path: 'info',
         component: ShopInfo,
+        meta: {
+          title: '商家',
+        },
       },
       {
         path: '',
@@ -80,16 +90,12 @@ const routes = [
     ],
   },
   {
-    path: '*',
-    redirect: '/home',
+    path: '/scroll',
+    component: Scroll,
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
+    path: '*',
+    redirect: '/home',
   },
 ]
 

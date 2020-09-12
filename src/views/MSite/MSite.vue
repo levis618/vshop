@@ -2,12 +2,26 @@
   <section class="msite">
     <!--首页头部-->
     <HeaderTop :title="address.name">
-      <span class="header_search" slot="left">
+      <span
+        class="header_search"
+        slot="left"
+        @click="$router.push('/search')"
+      >
         <i class="iconfont icon-sousuo"></i>
       </span>
-      <span class="header_login" slot="right" @click="go">
-        <span class="header_login_text" v-if="!userInfo._id">登录|注册</span>
-        <span class="header_login_text" v-else>
+      <span
+        class="header_login"
+        slot="right"
+        @click="go"
+      >
+        <span
+          class="header_login_text"
+          v-if="!userInfo._id"
+        >登录|注册</span>
+        <span
+          class="header_login_text"
+          v-else
+        >
           <i class="iconfont icon-person"></i>
         </span>
       </span>
@@ -24,6 +38,7 @@
 </template>
 
 <script>
+import { Indicator } from 'mint-ui'
 import { mapActions, mapState } from 'vuex'
 import BScroll from 'better-scroll'
 
@@ -32,15 +47,17 @@ import MsiteNav from '../../components/MsiteNav/MsiteNav.vue'
 import ShopList from '../../components/ShopList/ShopList.vue'
 
 export default {
-  data() {
-    return {}
+  data () {
+    return {
+      isLoad: true,
+    }
   },
   computed: {
     ...mapState(['address', 'shops', 'userInfo']),
   },
   methods: {
     ...mapActions(['getShops']),
-    go() {
+    go () {
       const path = this.userInfo._id ? '/profile' : '/login'
       this.$router.push(path)
       // if (this.userInfo._id) {
@@ -51,17 +68,48 @@ export default {
     },
   },
   watch: {
-    shops(newValue) {
+    shops (newValue) {
       this.$nextTick(() => {
-        if (newValue.length) {
+        if (!this.bScroll) {
           this.bScroll = new BScroll('.miste-content-wrapper', {
             click: true,
+            //上拉
+            // pullUpLoad: true
+            /*
+            //下拉
+             pullDownRefresh:{
+                threshold:50,
+                stop:20
+            }
+            */
+            //  是否显示滚动条
+            scrollbar: {
+              fade: true,
+            },
+            // 上拉加载更多
+            pullUpLoad: {
+              threshold: -50, // 当上拉距离超过50px时触发 pullingUp 事件
+            },
           })
+        } else {
+          this.bScroll.refresh()
         }
+        this.bScroll.on('pullingUp', async (pos) => {
+          console.log(pos, 'pos')
+          if (this.isLoad) {
+            this.isLoad = false
+            Indicator.open('加载中...')
+            await this.$store.dispatch('getShops').then(() => {
+              this.isLoad = true
+              Indicator.close()
+            })
+            this.bScroll.finishPullUp()
+          }
+        })
       })
     },
   },
-  mounted() {},
+  mounted () { },
   components: {
     HeaderTop,
     MsiteNav,
@@ -75,62 +123,6 @@ export default {
 
 .msite { // 首页
   width: 100%;
-
-  .msite_nav {
-    bottom-border-1px(#e4e4e4);
-    margin-top: 45px;
-    height: 200px;
-    background: #fff;
-
-    .swiper-container {
-      width: 100%;
-      height: 100%;
-
-      .swiper-wrapper {
-        width: 100%;
-        height: 100%;
-
-        .swiper-slide {
-          display: flex;
-          justify-content: center;
-          align-items: flex-start;
-          flex-wrap: wrap;
-
-          .link_to_food {
-            width: 25%;
-
-            .food_container {
-              display: block;
-              width: 100%;
-              text-align: center;
-              padding-bottom: 10px;
-              font-size: 0;
-
-              img {
-                display: inline-block;
-                width: 50px;
-                height: 50px;
-              }
-            }
-
-            span {
-              display: block;
-              width: 100%;
-              text-align: center;
-              font-size: 13px;
-              color: #666;
-            }
-          }
-        }
-      }
-
-      .swiper-pagination {
-        >span.swiper-pagination-bullet-active {
-          background: #02a774;
-        }
-      }
-    }
-  }
 
   .miste-content-wrapper {
     position: fixed;

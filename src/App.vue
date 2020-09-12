@@ -1,8 +1,13 @@
 <template>
   <div id="app">
+    <!-- <transition
+      name="fade"
+      mode="out-in"
+    >
+      <router-view />
+    </transition> -->
     <router-view />
     <FooterGuide v-show="$route.meta.hasFoot" />
-    <!-- <FooterGuide v-show="$route.meta.showFooter" /> -->
   </div>
 </template>
 
@@ -11,10 +16,11 @@ import { mapActions } from 'vuex'
 import FooterGuide from './components/FooterGuide/FooterGuide.vue'
 export default {
   methods: {
-    ...mapActions(['autoLogin']),
+    ...mapActions(['autoLogin', 'getAddress']),
   },
-  mounted() {
+  mounted () {
     this.autoLogin()
+    this.getAddress()
   },
   components: {
     FooterGuide,
@@ -26,10 +32,17 @@ export default {
 #app {
   width: 100%;
   height: 100%;
-  // background: #f5f5f5;
-}
 
-* {
-  touch-action: pan-y;
+  .fade-enter-active, .fade-leave-active {
+    transition: transform 0.3s;
+  }
+
+  .fade-enter-to, .fade-leave {
+    transform: translateX(0);
+  }
+
+  .fade-enter, fade-leave-to {
+    transform: translateX(100%);
+  }
 }
 </style>

@@ -27,7 +27,12 @@
       </span>
       <span>我的</span>
     </router-link> -->
-    <router-link :to="{ name: 'Profile', params: { id: 1234345 } }" class="guide_item" :class="{ on: $route.path === '/profile' }" replace>
+    <router-link
+      :to="{ name: 'Profile', params: { id: 1234345 } }"
+      class="guide_item"
+      :class="{ on: $route.path === '/profile' }"
+      replace
+    >
       <span class="item_icon">
         <i class="iconfont icon-geren"></i>
       </span>
@@ -70,7 +75,6 @@ export default {}
 
     span {
       font-size: 12px;
-      margin-top: 2px;
       margin-bottom: 2px;
 
       .iconfont {

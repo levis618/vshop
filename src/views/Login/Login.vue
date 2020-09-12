@@ -4,57 +4,66 @@
       <div class="login_header">
         <h2 class="login_logo">硅谷外卖</h2>
         <div class="login_header_title">
-          <a
-            href="javascript:;"
-            :class="{ on: isLoginType }"
-            @click="toggleLoginType"
-          >短信登录</a>
-          <a
-            href="javascript:;"
-            :class="{ on: !isLoginType }"
-            @click="toggleLoginType"
-          >密码登录</a>
+          <a href="javascript:;" :class="{ on: loginType }" @click="toggleLoginType">短信登录</a>
+          <a href="javascript:;" :class="{ on: !loginType }" @click="toggleLoginType">密码登录</a>
         </div>
       </div>
       <div class="login_content">
-        <form @submit.prevent="login_submit">
-          <div :class="{ on: isLoginType }">
+        <form @submit.prevent="login">
+          <div :class="{ on: loginType }">
             <section class="login_message">
               <input
                 type="tel"
                 maxlength="11"
                 placeholder="手机号"
                 v-model="phone"
+                name="phone"
+                v-validate="{ required: true, regex: /^1\d{10}$/ }"
               />
               <button
                 :disabled="!rightPhone"
                 class="get_verification"
-                :class="{right_phone:rightPhone}"
+                :class="{ right_phone: rightPhone }"
                 @click.prevent="getCode"
-              >{{computeTime?`已发送(${computeTime}s)`:'获取验证码'}}</button>
+              >
+                {{ computeTime ? `已发送(${computeTime}s)` : '获取验证码' }}
+              </button>
+              <span style="color: red;" v-show="errors.has('phone')">{{
+                errors.first('phone')
+              }}</span>
             </section>
             <section class="login_verification">
               <input
-                type="tel"
+                type="text"
                 maxlength="8"
                 placeholder="验证码"
                 v-model="code"
+                name="code"
+                v-validate="'required'"
               />
+              <span style="color: red;" v-show="errors.has('code')">{{
+                errors.first('code')
+              }}</span>
             </section>
             <section class="login_hint">
               温馨提示：未注册硅谷外卖帐号的手机号，登录时将自动注册，且代表已同意
               <a href="javascript:;">《用户服务协议》</a>
             </section>
           </div>
-          <div :class="{ on: !isLoginType }">
+          <div :class="{ on: !loginType }">
             <section>
               <section class="login_message">
                 <input
-                  type="tel"
+                  type="text"
                   maxlength="11"
                   placeholder="手机/邮箱/用户名"
                   v-model="name"
+                  name="name"
+                  v-validate="'required'"
                 />
+                <span style="color: red;" v-show="errors.has('name')">{{
+                  errors.first('name')
+                }}</span>
               </section>
               <section class="login_verification">
                 <input
@@ -63,6 +72,8 @@
                   placeholder="密码"
                   v-model="pwd"
                   v-if="showPwd"
+                  name="pwd"
+                  v-validate="'required'"
                 />
                 <input
                   type="password"
@@ -70,18 +81,20 @@
                   placeholder="密码"
                   v-model="pwd"
                   v-else
+                  name="pwd"
+                  v-validate="'required'"
                 />
                 <div
                   class="switch_button"
                   :class="showPwd ? 'on' : 'off'"
                   @click="showPwd = !showPwd"
                 >
-                  <div
-                    class="switch_circle"
-                    :class="showPwd ? 'right' : ''"
-                  ></div>
+                  <div class="switch_circle" :class="showPwd ? 'right' : ''"></div>
                   <span class="switch_text">{{ showPwd ? 'abc' : '...' }}</span>
                 </div>
+                <span style="color: red;" v-show="errors.has('pwd')">{{
+                  errors.first('pwd')
+                }}</span>
               </section>
               <section class="login_message">
                 <input
@@ -89,35 +102,29 @@
                   maxlength="11"
                   placeholder="验证码"
                   v-model="captcha"
+                  name="captcha"
+                  v-validate="'required'"
                 />
-                <img
-                  class="get_verification"
-                  alt="captcha"
-                  ref="captcha"
+                <img class="get_verification" alt="captcha" ref="captcha" @click="updateCaptcha" />
+                <span style="color: red;" v-show="errors.has('captcha')">{{
+                  errors.first('captcha')
+                }}</span>
+                <!-- <div
+                  class="svg_captcha"
                   @click="updateCaptcha"
-                />
+                ></div> -->
+                <!-- :style="{backgroundImage: `url(${captcha})`}" -->
               </section>
             </section>
           </div>
           <button class="login_submit">登录</button>
         </form>
-        <a
-          href="javascript:;"
-          class="about_us"
-        >关于我们</a>
+        <a href="javascript:;" class="about_us">关于我们</a>
       </div>
-      <a
-        href="javascript:;"
-        class="go_back"
-        @click="$router.back()"
-      >
+      <a href="javascript:;" class="go_back" @click="$router.back()">
         <i class="iconfont icon-jiantou2"></i>
       </a>
-      <AlertTip
-        :alertText="alertText"
-        v-show="alertState"
-        @closeTip="alertClose"
-      />
+      <AlertTip :alertText="alertText" v-show="alertState" @closeTip="alertClose" />
     </div>
   </section>
 </template>
@@ -125,40 +132,38 @@
 <script>
 import AlertTip from '../../components/AlertTip/AlertTip.vue'
 import { reqLoginPwd, reqSendCode, reqLoginSms } from '../../api'
-import { mapActions } from 'vuex'
 
 import { Toast, MessageBox } from 'mint-ui'
 export default {
-  data () {
+  data() {
     return {
       name: '', // 用户名
       pwd: '', // 密码
       captcha: '', // 图形验证码
-      phone: '',  // 手机号
-      code: '',  // 短信验证码
-      computeTime: 0,  //倒计时
-      isLoginType: false, // 登录方式,true为短信登录,false为密码登录
+      phone: '', // 手机号
+      code: '', // 短信验证码
+      computeTime: 0, //倒计时
+      loginType: false, // 登录方式,true为短信登录,false为密码登录
       showPwd: false, // 显示/隐藏密码
       alertText: '', // 提示框文本
       alertState: false, // 提示框显示/隐藏
     }
   },
   computed: {
-    rightPhone () {
+    rightPhone() {
       return /^1\d{10}$/.test(this.phone)
-    }
+    },
   },
   methods: {
-    ...mapActions(['login']),
     // 切换登录方式
-    toggleLoginType () {
-      this.isLoginType = !this.isLoginType
+    toggleLoginType() {
+      this.loginType = !this.loginType
     },
     // 提交登录
-    async login_submit () {
-      const { name, pwd, captcha, isLoginType, phone, code } = this
+    async login_submit() {
+      const { name, pwd, captcha, loginType, phone, code } = this
       let result
-      if (!isLoginType) {
+      if (!loginType) {
         // 密码登录
         if (!name) {
           // this.alertShow('用户名不能为空')
@@ -196,16 +201,49 @@ export default {
         Toast(result.msg)
       }
     },
-    alertShow (text) {
+    async login() {
+      // 进行前台表单验证
+      let names
+      if (this.loginType) {
+        names = ['phone', 'code']
+      } else {
+        names = ['name', 'pwd', 'captcha']
+      }
+
+      const success = await this.$validator.validateAll(names) // 对指定的所有表单项进行验证
+      const { phone, code, name, pwd, captcha, loginType, login, computeTime, updateCaptcha } = this
+      let result
+      if (success) {
+        if (loginType) {
+          result = await reqLoginSms(phone, code)
+        } else {
+          result = await reqLoginPwd(name, pwd, captcha)
+          if (result.code) {
+            this.captcha = ''
+            updateCaptcha()
+          }
+        }
+      }
+      if (!result.code) {
+        this.$store.dispatch('login', { userInfo: result.data })
+        this.$router.replace('/profile')
+      } else {
+        MessageBox.alert(result.msg)
+      }
+
+      console.log(result)
+    },
+
+    alertShow(text) {
       this.alertText = text
       this.alertState = true
     },
-    alertClose () {
+    alertClose() {
       this.alertText = ''
       this.alertState = false
     },
     // 获取短信验证码
-    async getCode () {
+    async getCode() {
       if (!this.computeTime) {
         this.computeTime = 30
         this.intervalId = setInterval(() => {
@@ -213,8 +251,7 @@ export default {
           if (!this.computeTime) {
             clearInterval(this.intervalId)
           }
-          console.log(this.computeTime)
-        }, 1000);
+        }, 1000)
         const { code, msg } = await reqSendCode(this.phone)
         if (code) {
           Toast(msg)
@@ -228,7 +265,7 @@ export default {
     },
 
     // 获取一个新的图片验证码
-    updateCaptcha () {
+    async updateCaptcha() {
       // 每次指定的src要不一样
       this.$refs.captcha.src = 'http://localhost:4000/captcha?time=' + Date.now()
     },
@@ -236,10 +273,10 @@ export default {
   components: {
     AlertTip,
   },
-  mounted () {
+  mounted() {
     this.updateCaptcha()
   },
-  beforeRouteEnter (to, from, next) {
+  beforeRouteEnter(to, from, next) {
     next((vm) => {
       // const { _id } = vm.$store.state.useInfo
       // const isLogin = vm.$store.state.userInfo._id
@@ -327,6 +364,15 @@ export default {
             height: 48px;
             font-size: 14px;
             background: #fff;
+
+            .svg_captcha {
+              position: absolute;
+              top: 50%;
+              right: 10px;
+              width: 150px;
+              height: 48px;
+              transform: translateY(-50%);
+            }
 
             .get_verification {
               position: absolute;

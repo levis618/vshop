@@ -26,20 +26,24 @@
 </template>
 
 <script>
-import ShopHeader from '@/components/ShopHeader/ShopHeader.vue';
-
+import { mapActions } from 'vuex'
+import ShopHeader from '@/components/ShopHeader/ShopHeader.vue'
 
 export default {
   props: ['id'],
   // props: {
   //   id: String
   // },
+  methods: {
+    ...mapActions(['recShopInfo']),
+  },
   components: {
-    ShopHeader
+    ShopHeader,
   },
   mounted () {
+    this.recShopInfo()
   },
-};
+}
 </script>
 
 <style lang="stylus" scoped>

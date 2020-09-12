@@ -64,7 +64,7 @@ export default {
 <style lang="stylus" scoped>
 .msite_nav {
     bottom-border-1px(#e4e4e4);
-    margin-top: 45px;
+    margin-top: 10px;
     height: 200px;
     background: #fff;
 

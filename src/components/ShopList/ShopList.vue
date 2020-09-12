@@ -8,8 +8,8 @@
       <ul class="shop_list">
         <li
           class="shop_li"
-          v-for="shop in shops"
-          :key="shop.id"
+          v-for="(shop, index) in shops"
+          :key="index"
           @click="$router.push(`/shop/${shop.id}`)"
         >
           <a>
@@ -27,7 +27,9 @@
                     class="supports"
                     v-for="support in shop.supports"
                     :key="support.id"
-                  >{{ support.icon_name }}</li>
+                  >
+                    {{ support.icon_name }}
+                  </li>
                 </ul>
               </section>
               <section class="shop_rating_order">
@@ -112,7 +114,7 @@ export default {
 
     .shop_list {
       .shop_li {
-        bottom-border-1px(#f1f1f1);
+        bottom-border-1px();
         width: 100%;
 
         >a {
