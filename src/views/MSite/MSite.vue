@@ -72,19 +72,18 @@ export default {
       this.$nextTick(() => {
         if (!this.bScroll) {
           this.bScroll = new BScroll('.miste-content-wrapper', {
+            // 是否横向滚动
+            // scrollX: true,
+            // 是否派发click事件
             click: true,
-            //上拉
-            // pullUpLoad: true
-            /*
-            //下拉
-             pullDownRefresh:{
-                threshold:50,
-                stop:20
-            }
-            */
             //  是否显示滚动条
             scrollbar: {
               fade: true,
+            },
+            // 下拉加载更多
+            pullDownRefresh: {
+              threshold: 50,
+              stop: 0
             },
             // 上拉加载更多
             pullUpLoad: {
@@ -92,10 +91,18 @@ export default {
             },
           })
         } else {
+          // 如果BScroll实例已存在，则刷新
           this.bScroll.refresh()
         }
-        this.bScroll.on('pullingUp', async (pos) => {
-          console.log(pos, 'pos')
+        // 监听下拉事件方法
+        this.bScroll.on('pullingDown', () => {
+          console.log('触发了下拉事件')
+          // 结束上拉事件
+          this.bScroll.finishPullDown()
+        })
+        // 监听上拉事件方法
+        this.bScroll.on('pullingUp', async () => {
+          console.log('触发了上拉事件')
           if (this.isLoad) {
             this.isLoad = false
             Indicator.open('加载中...')
@@ -103,8 +110,9 @@ export default {
               this.isLoad = true
               Indicator.close()
             })
-            this.bScroll.finishPullUp()
           }
+          // 结束下拉事件
+          this.bScroll.finishPullUp()
         })
       })
     },
